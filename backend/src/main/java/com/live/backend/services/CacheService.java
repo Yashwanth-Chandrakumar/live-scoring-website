@@ -27,12 +27,15 @@ public class CacheService {
         return cacheRepository.save(cache);
     }
 
-    public Cache updateCacheEntry(String key, Cache cache) {
-        if (cacheRepository.existsById(key)) {
-            cache.setCacheKey(key);
+    public Cache updateCacheEntry(String key, Cache updatedCache) {
+        Optional<Cache> existingCache = cacheRepository.findById(key);
+        if (existingCache.isPresent()) {
+            Cache cache = existingCache.get();
+            cache.setValue(updatedCache.getValue());
+            cache.setExpiration(updatedCache.getExpiration());
             return cacheRepository.save(cache);
         } else {
-            throw new RuntimeException("Cache entry not found with key " + key);
+            throw new RuntimeException("Cache entry not found with key: " + key);
         }
     }
 

@@ -39,11 +39,10 @@ public class LiveScoresController {
 
     @PutMapping("/{id}")
     public ResponseEntity<LiveScores> updateLiveScore(@PathVariable Long id, @RequestBody LiveScores liveScores) {
-        Optional<LiveScores> existingLiveScore = liveScoresService.findById(id);
-        if (existingLiveScore.isPresent()) {
-            LiveScores updatedLiveScore = liveScoresService.save(liveScores);
+        try {
+            LiveScores updatedLiveScore = liveScoresService.updateLiveScores(id, liveScores);
             return new ResponseEntity<>(updatedLiveScore, HttpStatus.OK);
-        } else {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
